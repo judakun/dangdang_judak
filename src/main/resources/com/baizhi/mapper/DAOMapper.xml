@@ -1,0 +1,259 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<!-- 
+	namespace: 指定当前mapper.xml管理的接口 全限定名
+	注意：一个mapper.xml只能管理一个接口
+-->
+
+<!--  -->
+<mapper namespace="com.baizhi.dao.AdminDAO">
+	<!--查询类别结果映射  -->
+	<resultMap id="CategoryMap" type="Category">
+		<id property="f_id" column="fid" />
+		<result property="f_name" column="fname" />
+		<result property="f_levels" column="flevel" />
+		<result property="f_parent_id" column="fpid" />
+		<association property="f_Category" javaType="Category">
+			<id property="f_id" column="sid" />
+			<result property="f_name" column="sname" />
+		</association>
+	</resultMap>
+	
+	<!-- id:方法名     parameterType：传递参数类型 -->
+	<!-- 登陆查询 -->
+	<select id="m_login" resultType="Admin">
+		select m_id,m_username,m_password from d_manager 
+		where m_username=#{m_username}
+	</select>
+	<!-- 查询所有类别 -->
+	<select id="categoryList" resultMap="CategoryMap">
+		select f.f_id fid,f.f_name fname,f.f_levels flevel,f.f_parent_id fpid,s.f_id sid,s.f_name sname
+		from d_category f
+		left join d_category s 
+		on f.f_parent_id=s.f_id
+	</select>
+	<!-- 添加一级分类 -->
+	<select id="selectCate"  resultType="Category">
+		select f_id,f_name,f_parent_id,f_levels from d_category
+		<!-- <where>
+			<if test="f_name!=null">
+				f_name=#{f_name} 
+			</if> 
+		</where>  -->
+		<where>
+			<if test="f_name!=null">
+				f_name=#{f_name} 
+			</if>
+			<if test="f_id!=null">
+				and f_id=#{f_id}   
+			</if>
+			<if test="f_parent_id!=null">
+				and f_parent_id=#{f_parent_id} 
+			</if>
+			<if test="f_levels!=null">
+				and f_levels=#{f_levels} 
+			</if>
+		</where>
+	</select>
+	<insert id="addFirstCate" parameterType="Category">
+		insert into d_category values(#{f_id},#{f_name},#{f_parent_id,jdbcType=VARCHAR},#{f_levels})
+	</insert>
+	<!-- 删除分类 -->
+	<delete id="deleteCategory" parameterType="Category">
+		delete d_category 
+		<where>
+			<if test="f_id!=null">
+				f_id=#{f_id} 
+			</if>
+			<if test="f_parent_id!=null">
+			and	f_parent_id=#{f_parent_id}
+			</if>
+		</where>
+		
+	</delete>
+	<!-- 查询所有书籍 -->
+	<select id="getBookList" resultType="Book">
+		select b_id,b_name,b_author,b_price,b_dprice,b_cbs,b_cbDate,b_face,b_saleNum,b_kc,b_category_id,b_intro 
+		from d_book
+		<where>
+			<if test="b_id!=null">
+				b_id=#{b_id} 
+			</if>
+			<if test="b_name!=null">
+				and b_name like CONCAT(CONCAT('%',#{b_name}),'%')
+			</if>
+			<if test="b_author!=null">
+				and b_author like CONCAT(CONCAT('%',#{b_author}),'%')
+			</if>
+			<if test="b_cbs!=null">
+				and b_cbs like CONCAT(CONCAT('%',#{b_cbs}),'%')
+			</if>
+		</where>
+	</select>
+	<!-- 插入书籍 -->
+	<select id="selectOne" parameterType="String" resultType="Book">
+		select * from d_book where b_name=#{b_name}
+	</select>
+	
+	<insert id="addBook" parameterType="Book">
+		insert into d_book values(
+		#{b_id},
+		#{b_name},
+		#{b_price,jdbcType=VARCHAR},
+		#{b_dprice,jdbcType=VARCHAR},
+		#{b_author,jdbcType=VARCHAR},
+		#{b_category_id,jdbcType=VARCHAR},
+		#{b_intro,jdbcType=VARCHAR},
+		#{b_auIntro,jdbcType=VARCHAR},
+		#{b_cbs,jdbcType=VARCHAR},
+		#{b_cbDate,jdbcType=VARCHAR},
+		#{b_ysDate,jdbcType=VARCHAR},
+		#{b_bc,jdbcType=VARCHAR},
+		#{b_yc,jdbcType=VARCHAR},
+		#{b_zz,jdbcType=VARCHAR},
+		#{b_page,jdbcType=VARCHAR},
+		#{b_bz,jdbcType=VARCHAR},
+		#{b_kb,jdbcType=VARCHAR},
+		#{b_words,jdbcType=VARCHAR},
+		#{ISBN,jdbcType=VARCHAR},
+		#{b_bjtj,jdbcType=VARCHAR},
+		#{b_mtpl,jdbcType=VARCHAR},
+		#{b_jbml,jdbcType=VARCHAR},
+		#{b_face,jdbcType=VARCHAR},
+		#{b_kc,jdbcType=VARCHAR},
+		#{b_saleNum,jdbcType=VARCHAR},
+		sysdate
+		)	
+	</insert>
+	<!-- 删除书籍 -->
+	<delete id="deleteBook" parameterType="String">
+		delete d_book where b_id=#{b_id}
+	</delete>
+	<!-- 修改图书，获取图书所有信息 -->
+	<select id="getBDelList" parameterType="Book" resultType="Book">
+		select * from d_book
+		<where>
+			<if test="b_id!=null">
+				b_id=#{b_id}
+			</if>
+		</where>
+	</select>
+	<!-- 修改图书的信息 -->
+	<update id="updateBook" parameterType="Book">
+		update d_book set
+					<if test="b_price!=null">
+						b_name=#{b_name}
+					</if>
+					<if test="b_price!=null">
+						,b_price=#{b_price}
+					</if>
+					<if test="b_dprice!=null">
+						,b_dprice=#{b_dprice}
+					</if>
+					<if test="b_author!=null">
+						,b_author=#{b_author}
+					</if>
+					<if test="b_category_id!=null">
+						,b_category_id=#{b_category_id}
+					</if>
+					<if test="b_intro!=null">
+						,b_intro=#{b_intro}
+					</if>
+					<if test="b_auIntro!=null">
+						,b_auIntro=#{b_auIntro}
+					</if>
+					<if test="b_cbs!=null">
+						,b_cbs=#{b_cbs}
+					</if>
+					<if test="b_cbDate!=null">
+						,b_cbDate=#{b_cbDate}
+					</if>
+					<if test="b_ysDate!=null">
+						,b_ysDate=#{b_ysDate}
+					</if>
+					<if test="b_bc!=null">
+						,b_bc=#{b_bc}
+					</if>
+					<if test="b_yc!=null">
+						,b_yc=#{b_yc}
+					</if>
+					<if test="b_zz!=null">
+						,b_zz=#{b_zz}
+					</if>
+					<if test="b_page!=null">
+						,b_page=#{b_page}
+					</if>
+					<if test="b_bz!=null">
+						,b_bz=#{b_bz}
+					</if>
+					<if test="b_kb!=null">
+						,b_kb=#{b_kb}
+					</if>
+					<if test="b_words!=null">
+						,b_words=#{b_words}
+					</if>
+					<if test="ISBN!=null">
+						,ISBN=#{ISBN}
+					</if>
+					<if test="b_bjtj!=null">
+						,b_bjtj=#{b_bjtj}
+					</if>
+					<if test="b_mtpl!=null">
+						,b_mtpl=#{b_mtpl}
+					</if>
+					<if test="b_jbml!=null">
+						,b_jbml=#{b_jbml}
+					</if>
+					<if test="b_face!=null">
+						,b_face=#{b_face}
+					</if>
+					<if test="b_kc!=null">
+						,b_kc=#{b_kc}
+					</if>
+					<if test="b_saleNum!=null">
+						,b_saleNum=#{b_saleNum}
+					</if>
+				where b_id=#{b_id}
+	</update>
+	<!-- 查询订单 -->	
+	<select id="selectOrder" parameterType="Order" resultType="Order">
+		select o_id,o_orderNum,o_total,o_createDate,user_id,o_toAddress,o_toUName 
+		from d_order
+		<where>
+			<if test="o_total!=null">
+				o_total=#{o_total}
+			</if>
+			<if test="o_orderNum!=null">
+				and  o_orderNum=#{o_orderNum}
+			</if>
+		</where>
+	</select>	
+	<!-- 查询所有用户 -->
+	<select id="selectAllUser" resultType="User">
+		select u_id,u_nickname,u_email,u_status,u_code from d_user
+	</select>
+	<!-- 修改用户状态 -->	
+	<update id="updateUserStatus" parameterType="User">
+		update d_user set
+			u_status=#{u_status}
+		where u_id=#{u_id}
+	</update>	
+</mapper>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

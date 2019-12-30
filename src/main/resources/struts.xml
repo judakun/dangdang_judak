@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE struts PUBLIC
+	"-//Apache Software Foundation//DTD Struts Configuration 2.3//EN"
+	"http://struts.apache.org/dtds/struts-2.3.dtd">
+
+<struts>	
+	<include file="MyStruts/UserStruts.xml"></include>
+	<include file="MyStruts/BookStruts.xml"></include>
+	
+	<package name="admin" extends="struts-default">
+		<action name="admin" class="com.baizhi.action.DdAction" method="adminLogin">
+			<result name="adLoginSuccess">/back/main/main.jsp</result>
+			<result name="adLoginError">/back/login.jsp</result>
+		</action>
+		<action name="getCode" class="com.baizhi.action.DdAction" method="getCode"></action>
+		<action name="adminExit" class="com.baizhi.action.DdAction" method="adminExit">
+				<result name="exit">/back/login.jsp</result>
+		</action>
+	</package>
+	<!-- 后台数据管理 -->
+	<package name="adminDate" extends="struts-default" namespace="/back">
+		<action name="getCategoryList" class="com.baizhi.action.DdAction" method="categoryList">
+			<result name="ShowCategoryList" type="dispatcher">/back/category/show.jsp</result>
+		</action>
+		<action name="addFirstCate" class="com.baizhi.action.DdAction" method="addFirstCate">
+			<result name="addSuccess" type="redirectAction">getCategoryList</result>
+			<result name="addFalse">/back/category/add-first.jsp</result>
+		</action>
+		<action name="addSecondCate1" class="com.baizhi.action.DdAction" method="addSecondCate1">
+			<result name="addSecondCate1" type="dispatcher">/back/category/add-second.jsp</result>
+		</action>
+		<action name="addSecondCate2" class="com.baizhi.action.DdAction" method="addSecondCate2">
+			<result name="addSuccess" type="redirectAction">getCategoryList</result>
+			<result name="addFalse">/back/category/add-second.jsp</result>
+		</action>
+		<action name="deleteCategory" class="com.baizhi.action.DdAction" method="deleteCategory">
+			<result name="deleteSuccess" type="redirectAction">getCategoryList</result>
+			<result name="deleteFalse" type="redirectAction">getCategoryList</result>
+		</action>
+		<action name="getbookList" class="com.baizhi.action.DdAction" method="showBook">
+			<result name="getBookList" type="dispatcher">/back/book/show.jsp</result>
+		</action>
+		<action name="addBook1" class="com.baizhi.action.DdAction" method="addBook1">
+			<result name="category2List" type="dispatcher">/back/book/add.jsp</result>
+		</action>
+		<action name="addBook2" class="com.baizhi.action.DdAction" method="addBook2">
+			<param name="image">back/images</param>
+			<result name="addSuccess" type="redirectAction">getbookList</result>
+			<result name="addFalse">/back/book/add.jsp</result>
+		</action>
+		<action name="deleteBook" class="com.baizhi.action.DdAction" method="deleteBook">
+			<result name="deleteBook" type="redirectAction">getbookList</result>
+		</action>
+		<action name="updateBook1" class="com.baizhi.action.DdAction" method="updateBook1">
+			<result name="updateBook1" type="dispatcher">/back/book/update.jsp</result>
+		</action>
+		<action name="updateBook2" class="com.baizhi.action.DdAction" method="updateBook2">
+			<param name="image">back/images</param>
+			<result name="updateBook2" type="redirectAction">getbookList</result>
+		</action>
+		<action name="serchBook" class="com.baizhi.action.DdAction" method="serchBook">
+			<result name="serchBook" type="dispatcher">/back/book/show.jsp</result>
+		</action>
+		<!-- 用户管理 -->
+		<action name="showUser" class="com.baizhi.action.DdAction" method="showUser">
+			<result name="showUser" type="dispatcher">/back/user/show.jsp</result>
+		</action>
+		<!-- 订单管理 -->
+		<action name="getAllOrder" class="com.baizhi.action.DdAction" method="getAllOrder">
+			<result name="getAllOrder" type="dispatcher">/back/order/show.jsp</result>
+		</action>
+		<!-- 订单详情 -->
+		<action name="orderDetail" class="com.baizhi.action.DdAction" method="orderDetail">
+			<result name="orderDetail" type="dispatcher">/back/order/detail.jsp</result>
+		</action>
+		<!-- 修改用户状态 -->
+		<action name="updateUserStatus" class="com.baizhi.action.DdAction" method="updateUserStatus">
+			<result name="updateUserStatus" type="redirectAction">showUser</result>
+		</action>
+	</package>
+</struts>

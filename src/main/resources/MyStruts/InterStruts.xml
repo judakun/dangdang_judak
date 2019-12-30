@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE struts PUBLIC
+	"-//Apache Software Foundation//DTD Struts Configuration 2.3//EN"
+	"http://struts.apache.org/dtds/struts-2.3.dtd">
+<struts>
+	<package name="Inter" extends="struts-default">
+	<!-- 拦截器，只在本包中有效 -->
+		<!-- 拦截器只在本包中有效 -->
+		<interceptors>
+			<!-- 声明拦截器 -->
+			<interceptor name="login" class="com.baizhi.interceptor.MyInterceptor"></interceptor>
+			<!-- 声明拦截器栈 -->
+			<interceptor-stack name="myStack">
+				<interceptor-ref name="defaultStack"></interceptor-ref>
+				<interceptor-ref name="login"></interceptor-ref>
+			</interceptor-stack>
+		</interceptors>
+		<!-- 声明默认拦截器栈，拦截包中所所有的跳转路径 -->
+		<!-- <default-interceptor-ref name="myStack"></default-interceptor-ref> -->
+		<!-- 全局跳转，未登陆，跳转至登陆界面 -->
+		<global-results>
+			<result name="notLogin">/front/user/login_form.jsp</result>
+			<result name="notActive">
+				<param name="namespace">/U1</param>
+				<param name="actionName">sendEmail</param>
+			</result>
+		</global-results>
+	</package>
+</struts>

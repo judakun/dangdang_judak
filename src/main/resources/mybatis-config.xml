@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE configuration PUBLIC "-//mybatis.org//DTD Config 3.0//EN" "http://mybatis.org/dtd/mybatis-3-config.dtd" >
+<configuration>
+	<!-- 读取jdbc相关配置信息的 文件    进行数据的填充需要使用 ${key} -->
+	<properties resource="jdbc.properties"></properties>
+	<!-- 允许SQL语句插入空值 -->
+	<settings>
+    	<setting name="jdbcTypeForNull" value="NULL" />  
+    </settings>
+	<typeAliases>
+		<typeAlias type="com.baizhi.entity.Admin" alias="Admin"/>
+		<typeAlias type="com.baizhi.entity.Category" alias="Category"/>
+		<typeAlias type="com.baizhi.entity.Book" alias="Book"/>
+		<typeAlias type="com.baizhi.entity.Order" alias="Order"/>
+		<typeAlias type="com.baizhi.entity.User" alias="User"/>
+		<typeAlias type="com.baizhi.entity.Address" alias="Address"/>
+		<typeAlias type="com.baizhi.entity.OrderItem" alias="OrderItem"/>
+	</typeAliases>
+	
+	<!-- JDBC数据连接的初始化配置 -->
+	<environments default="oracle">
+		<environment id="oracle">
+			<transactionManager type="JDBC"></transactionManager>
+			<dataSource type="POOLED">
+				<!-- 具体的参数配置已经转移到另外一个更小的配置文件中  jdbc.properties -->
+				<property name="driver" value="${driver}"/>
+				<property name="url" value="${url}"/>
+				<property name="username" value="${username}"/>
+				<property name="password" value="${password}"/>
+			</dataSource>
+		</environment>
+	</environments>
+	
+	<!-- 声明注册项目中已经完成编码的mapper.xml文件的路径-->
+	<mappers>
+		<mapper resource="com/baizhi/mapper/DAOMapper.xml" />
+		<mapper resource="com/baizhi/mapper/UserMapper.xml" />
+		<mapper resource="com/baizhi/mapper/BookMapper.xml" />
+		<mapper resource="com/baizhi/mapper/OrderMapper.xml" />
+	</mappers>
+	
+</configuration>
+
+
+

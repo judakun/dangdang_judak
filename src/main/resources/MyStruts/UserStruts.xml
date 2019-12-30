@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE struts PUBLIC
+	"-//Apache Software Foundation//DTD Struts Configuration 2.3//EN"
+	"http://struts.apache.org/dtds/struts-2.3.dtd">
+<struts>
+	<include file="MyStruts/BookStruts.xml"></include>
+	<package name="User" extends="struts-default" namespace="/U1">
+		<!-- 用户注册 -->
+		<action name="UserRegist" class="com.baizhi.action.UserAction" method="UserRegist">
+			<result name="registSuccess" type="redirectAction">sendEmail</result>
+			<result name="registFalse">/front/user/register_form.jsp</result>
+		</action>
+		<!-- 发送激活码 -->
+		<action name="sendEmail" class="com.baizhi.action.UserAction" method="sendEmail">
+			<result name="sendEmail" type="dispatcher">/front/user/verify_form.jsp</result>
+		</action>
+		<!-- 邮箱验证 -->
+		<action name="register_ok" class="com.baizhi.action.UserAction" method="register_ok">
+			<result name="register_ok" type="dispatcher">/front/user/register_ok.jsp</result>
+			<result name="register_error" type="redirectAction">sendEmail</result>
+		</action>
+		<!-- 登陆验证 -->
+		<action name="loginAction" class="com.baizhi.action.UserAction" method="loginAction">
+			<result name="loginSuccess" type="redirectAction">
+				<param name="namespace">/B1</param>
+				<param name="actionName">mainShow</param>
+			</result>
+			<result name="loginFalse">/front/user/login_form.jsp</result>
+		</action>
+		<!-- 用户退出 -->
+		<action name="userExit" class="com.baizhi.action.UserAction" method="userExit">
+			<result name="userExit" type="redirect">/front/user/login_form.jsp</result>
+		</action>
+	</package>
+</struts>

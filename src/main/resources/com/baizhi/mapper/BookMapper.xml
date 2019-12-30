@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+
+<mapper namespace="com.baizhi.dao.BookDAO">
+	<!--查询类别结果映射  -->
+	<resultMap id="CategoryMap" type="Category">
+		<id property="f_id" column="fid" />
+		<result property="f_name" column="fname" />
+		<result property="f_levels" column="flevel" />
+		<result property="f_parent_id" column="fpid" />
+		<collection property="s_Category" ofType="Category">
+			<id property="f_id" column="sid" />
+			<result property="f_name" column="sname" />
+			<result property="f_parent_id" column="sfid" />
+		</collection>
+	</resultMap>
+	<!-- 查询所有类别  父子 -->
+	<select id="selectCategory" resultMap="CategoryMap">
+		select f.f_id fid,f.f_name fname,f.f_levels flevel,f.f_parent_id fpid,s.f_id sid,s.f_name sname,s.f_parent_id sfid 
+		from d_category f
+		left join d_category s 
+		on f.f_id=s.f_parent_id
+		<where>
+			<if test="f_levels!=null">
+				f.f_levels=#{f_levels}
+			</if>
+			<if test="f_id!=null">
+				and f.f_id=#{f_id}
+			</if>
+		</where>
+	</select>	
+	
+	
+	<!-- 按销量排序取前八本 -->	
+	<select id="selectBookBySale" resultType="Book">
+		select * from (
+			select ROWNUM r, b.* from D_BOOK b
+			order by b_saleNum )
+			where r between 1 and 8
+	</select>
+	<!-- 按sjDate排序取前八本 -->	
+	<select id="selectBookBySjDate" resultType="Book">
+		select * from (
+			select ROWNUM r, b.* from D_BOOK b
+			order by b_sjDate )
+			where r between 1 and 4
+	</select>
+	<!-- 按sjDate&saleNum排序取前八本 -->	
+	<select id="selectBookBySjDate_Sale" resultType="Book">
+		select * from (
+			select ROWNUM r, b.* from D_BOOK b
+			order by b_sjDate , b_saleNum)
+			where r between 1 and 8
+	</select>
+	<!-- 查询书籍一共多少条，用于分页 -->
+	<select id="bookCount" resultType="Integer">
+			select count(b_id) from  d_book
+				<where>
+					<choose>
+						<when test="sid==null || sid==''">
+							b_category_id in (select f_id from d_category where f_parent_id=#{fid})
+						</when>
+						<otherwise>
+							b_category_id =#{sid}
+						</otherwise>
+					</choose>
+				</where> 
+				
+	
+	</select>
+	<!-- 分页展示书籍 -->
+	<select id="selectByCateBook" resultType="book">
+		select * from (
+			select b.*,rownum rn from
+				(select * from  d_book
+				<where>
+					<choose>
+						<when test="sid==null || sid==''">
+							b_category_id in (select f_id from d_category where f_parent_id=#{fid})
+						</when>
+						<otherwise>
+							b_category_id =#{sid}
+						</otherwise>
+					</choose>
+				</where> 
+				)b) where rn between #{begin} and #{end}
+	</select>
+	<select id="selectBook" parameterType="Book" resultType="Book">
+		select * from d_book
+		<where>
+			<if test="b_id!=null">
+				b_id=#{b_id}
+			</if>
+		</where>
+	</select>
+</mapper>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

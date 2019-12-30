@@ -1,0 +1,11 @@
+<%-- <c:forEach items="${categoryList}" var="cate">
+			<tr>
+				<td>${cate.f_id }</td>
+				<td>${cate.f_name }</td>
+				<td>${cate.f_Category.f_name }</td>
+				<td>${cate.f_levels }</td>
+				<td>
+					<div class="button" onclick="location.href='' ">删除 &raquo;</div>	
+				</td>
+			</tr>
+			</c:forEach> --%>

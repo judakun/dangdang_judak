@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+
+<mapper namespace="com.baizhi.dao.OrderDAO">
+	<resultMap type="Order" id="orderItemMap">
+		<id property="o_id" column="did"/>
+		<result property="o_total" column="dtotal"/>
+		<result property="o_toUName" column="dtName"/>
+		<collection property="items" ofType="OrderItem">
+			<id property="ob_id" column="iid"/>
+			<result property="ob_BName" column="ibName"/>
+			<result property="ob_BCover" column="ibCover"/>
+			<result property="ob_YPrice" column="iyPrice"/>
+			<result property="ob_XPrice" column="ixPrice"/>
+			<result property="ob_count" column="ibCount"/>
+		</collection>
+	</resultMap>
+
+
+	<select id="selectAddress" resultType="Address">
+		select * from d_address
+		where user_id=#{u_id}
+	</select>
+	<insert id="addAddress" parameterType="Address">
+		insert into d_address values(
+		#{d_id},
+		#{d_name},
+		#{d_local},
+		#{d_phone},
+		#{d_zipCode},
+		#{user_id}
+		)
+	</insert>
+	<update id="updateAddress" parameterType="Address">
+		update d_address set
+			d_name = #{d_name},
+			d_local = #{d_local},
+			d_phone = #{d_phone},
+			d_zipCode = #{d_zipCode}
+		where d_id = #{d_id}
+	</update>
+	<select id="selectOneAddress" parameterType="Address" resultType="Address">
+		select d_id,d_name,d_local,d_zipCode,d_phone from d_address
+		<where>
+			<if test="d_id!=null">
+				d_id=#{d_id}
+			</if>
+		</where>
+	</select>
+	<!-- 添加订单 -->
+	<insert id="addOrder" parameterType="Order">
+		insert into d_order values(
+			#{o_id},
+			#{o_orderNum},
+			#{o_total},
+			#{o_createDate},
+			#{user_id},
+			#{o_toAddress},
+			#{o_toUName}
+		)
+	</insert>
+	<!-- 添加订单明细表 -->
+	<insert id="addOrderItem" parameterType="OrderItem">
+		insert into d_item values(
+			#{ob_id},
+			#{book_id},
+			#{item_id},
+			#{ob_count},
+			#{ob_createDate},
+			#{ob_BName},
+			#{ob_YPrice},
+			#{ob_XPrice},
+			#{ob_BCover}
+		)
+	
+	</insert>
+	<!-- 修改图书的销量和库存 -->
+	<update id="updateBook" parameterType="Book">
+		update d_book set 
+		b_kc=#{b_kc},
+		b_saleNum=#{b_saleNum}
+		where b_id=#{b_id}
+	</update>
+	<!-- 查看订单 -->
+	<select id="selectOrderByUser" resultType="Order" parameterType="String">
+		select * from d_order 
+		where user_id=#{u_id}
+	</select>
+	<!-- 根据订单id查询订单明细表 -->
+	<select id="selectOrderItemByO_id" resultMap="orderItemMap">
+		select d.o_id did,d.o_total dtotal,d.o_toUName dtName,i.ob_id iid,i.ob_BName ibName,i.ob_BCover ibCover,i.ob_YPrice iyPrice,i.ob_XPrice ixPrice,i.ob_count ibCount 
+		from d_order d
+		left join d_item i on d.o_id = i.item_id
+		where d.o_id=#{o_id}	 
+	</select>
+</mapper>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE struts PUBLIC
+	"-//Apache Software Foundation//DTD Struts Configuration 2.3//EN"
+	"http://struts.apache.org/dtds/struts-2.3.dtd">
+<struts>
+	<include file="MyStruts/InterStruts.xml"></include>
+	<package name="Book" extends="Inter" namespace="/B1">
+	
+		<action name="mainShow" class="com.baizhi.action.BookAction" method="mainShow">
+			<result name="mainShow" type="dispatcher">/front/main/main.jsp</result>
+		</action>
+		<action name="bookDetail" class="com.baizhi.action.BookAction" method="bookDetail">
+			<result name="bookDetail" type="dispatcher">/front/main/book_detail.jsp</result>
+		</action>
+		<action name="CategoryView" class="com.baizhi.action.BookAction" method="CategoryView">
+			<result name="CategoryView" type="dispatcher">/front/main/book_list.jsp</result>
+		</action>
+		
+		
+		<!-- 购物车 -->
+		<action name="BuyCar" class="com.baizhi.action.BookAction" method="addCart">
+			<interceptor-ref name="myStack"></interceptor-ref>
+			<result name="addCart" type="redirect">/front/cart/cart_list.jsp</result>
+		</action>
+		<action name="updateCount" class="com.baizhi.action.BookAction" method="updateCount">
+			<result name="updateCount" type="redirect">/front/cart/cart_list.jsp</result>
+		</action>
+		<action name="deleteCartBook" class="com.baizhi.action.BookAction" method="deleteCartBook">
+			<result name="deleteCartBook" type="redirect">/front/cart/cart_list.jsp</result>
+		</action>
+		<!-- 提交订单，查询当前用户的地址List -->
+		<action name="selectAddList1" class="com.baizhi.action.OrderAction" method="selectAddList1">
+			<interceptor-ref name="myStack"></interceptor-ref>
+			<result name="selectAddList1" type="dispatcher">/front/order/address_form.jsp</result>
+		</action>
+		<!-- 选择地址下一步，进入订单处理 -->
+		<action name="OrderAction" class="com.baizhi.action.OrderAction" method="OrderAction">
+			<result name="OrderAction" type="dispatcher">/front/order/order_ok.jsp</result>
+		</action>
+		<!-- 我的当当 -->
+		<action name="myOrder" class="com.baizhi.action.OrderAction" method="myOrder">
+			<result name="myOrder" type="dispatcher">/front/order/show.jsp</result>
+		</action>
+	</package>
+</struts>
