@@ -1,4 +1,4 @@
-<%-- <c:forEach items="${categoryList}" var="cate">
+﻿<%-- <c:forEach items="${categoryList}" var="cate">
 			<tr>
 				<td>${cate.f_id }</td>
 				<td>${cate.f_name }</td>
@@ -9,3 +9,4 @@
 				</td>
 			</tr>
 			</c:forEach> --%>
+测试本地修改
